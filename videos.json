@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "notes": "Scenes for VRedux. bearing/heading = true compass degrees (0 = north, 90 = east) seen from the filming spot. Distances/heights in metres. See README.md.",
+  "scenes": [
+    {
+      "id": "demo-corner",
+      "title": "Demo street corner (London)",
+      "subtitle": "Chaplin's Tramp (1915, real AI cut-out) walks down a London street, with three placeholder characters from three 'films' sharing the corner",
+      "kind": "corner",
+      "lat": null,
+      "lng": null,
+      "TODO": "Placeholder scene: the 360 is a stock CC0 London street. On location your camera replaces it (Passthrough). Replace lat/lng/heading + layers for a real Redux corner.",
+      "heading": 0,
+      "front": -40,
+      "eyeHeight": 1.6,
+      "background": {
+        "image": "videos/london-corner-4096.jpg",
+        "imageLow": "videos/london-corner-2048.jpg",
+        "credit": "'Urban Street 01' panorama, Poly Haven (CC0)"
+      },
+      "layers": [
+        {
+          "id": "tramp",
+          "title": "The Tramp walks off",
+          "film": "The Tramp (Chaplin, 1915)",
+          "year": 1915,
+          "credit": "Public domain film via Wikimedia Commons; cut-out made on the VRedux box with MediaPipe DeepLab v3 + selfie-multiclass, guided-filter refined",
+          "projection": "flat",
+          "sources": {
+            "stacked": "layers/tramp-stacked.mp4",
+            "webm": "layers/tramp.webm"
+          },
+          "aspect": 0.6565,
+          "bearing": -62,
+          "distance": 6,
+          "frameHeight": 4.4,
+          "elevation": -2.05,
+          "start": 0,
+          "loop": true,
+          "enabled": true,
+          "audio": false
+        },
+        {
+          "id": "walker",
+          "title": "The Walker",
+          "film": "Film A (placeholder)",
+          "year": 1984,
+          "projection": "flat",
+          "sources": {
+            "stacked": "layers/walker-stacked.mp4",
+            "webm": "layers/walker.webm"
+          },
+          "aspect": 1.7778,
+          "bearing": -14,
+          "distance": 14,
+          "frameHeight": 4.4,
+          "elevation": 0,
+          "start": 0,
+          "loop": true,
+          "enabled": true,
+          "audio": false
+        },
+        {
+          "id": "dancer",
+          "title": "The Dancer",
+          "film": "Film B (placeholder)",
+          "year": 2005,
+          "projection": "flat",
+          "sources": {
+            "stacked": "layers/dancer-stacked.mp4",
+            "webm": "layers/dancer.webm"
+          },
+          "aspect": 0.6667,
+          "bearing": 2,
+          "distance": 10,
+          "frameHeight": 2.9,
+          "elevation": 0,
+          "start": 1,
+          "loop": true,
+          "enabled": true,
+          "audio": false
+        },
+        {
+          "id": "waver",
+          "title": "The Waver",
+          "film": "Film C (placeholder)",
+          "year": 1999,
+          "projection": "flat",
+          "sources": {
+            "stacked": "layers/waver-stacked.mp4",
+            "webm": "layers/waver.webm"
+          },
+          "aspect": 0.6667,
+          "bearing": -26,
+          "distance": 8,
+          "frameHeight": 2.9,
+          "elevation": 0,
+          "start": 2,
+          "loop": true,
+          "enabled": true,
+          "audio": false
+        }
+      ]
+    },
+    {
+      "id": "walkable-corner",
+      "title": "Walkable corner (beta)",
+      "subtitle": "Gaussian-splat scene you can walk around in, with the Tramp and the dancer standing in it. Experimental.",
+      "kind": "walk",
+      "lat": null,
+      "lng": null,
+      "freePlayOnly": true,
+      "heading": 0,
+      "front": 0,
+      "eyeHeight": 1.6,
+      "startMode": "walk",
+      "splatSrc": "https://huggingface.co/cakewalk/splat-data/resolve/main/truck.splat",
+      "splat": {
+        "src": "https://huggingface.co/cakewalk/splat-data/resolve/main/truck.splat",
+        "credit": "Tanks and Temples 'Truck' scene, Gaussian splat sample via antimatter15/splat (cakewalk/splat-data)",
+        "rotation": [
+          180,
+          0,
+          0
+        ],
+        "scale": 1,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "spawn": [
+          0,
+          0,
+          5
+        ],
+        "spawnBearing": 0,
+        "anchor": [
+          0,
+          0,
+          0
+        ],
+        "groundY": -1.6,
+        "speed": 1.5
+      },
+      "background": null,
+      "layers": [
+        {
+          "id": "tramp",
+          "title": "The Tramp walks off",
+          "film": "The Tramp (Chaplin, 1915)",
+          "year": 1915,
+          "credit": "Public domain film via Wikimedia Commons; cut-out made on the VRedux box with MediaPipe DeepLab v3 + selfie-multiclass, guided-filter refined",
+          "projection": "flat",
+          "sources": {
+            "stacked": "layers/tramp-stacked.mp4",
+            "webm": "layers/tramp.webm"
+          },
+          "aspect": 0.6565,
+          "bearing": -25,
+          "distance": 4,
+          "frameHeight": 4.4,
+          "elevation": -2.05,
+          "start": 0,
+          "loop": true,
+          "enabled": true,
+          "audio": false
+        },
+        {
+          "id": "dancer",
+          "title": "The Dancer",
+          "film": "Film B (placeholder)",
+          "year": 2005,
+          "projection": "flat",
+          "sources": {
+            "stacked": "layers/dancer-stacked.mp4",
+            "webm": "layers/dancer.webm"
+          },
+          "aspect": 0.6667,
+          "bearing": 12,
+          "distance": 5,
+          "frameHeight": 2.6,
+          "elevation": 0,
+          "start": 1,
+          "loop": true,
+          "enabled": true,
+          "audio": false
+        }
+      ]
+    },
+    {
+      "id": "cubicle-your-fears",
+      "title": "Cubicle Your Fears",
+      "subtitle": "360 test clip, filmed inside a toilet cubicle (free-play, no GPS)",
+      "kind": "360",
+      "lat": null,
+      "lng": null,
+      "freePlayOnly": true,
+      "heading": 0,
+      "front": 0,
+      "eyeHeight": 1.6,
+      "credit": "Richard DeDomenici, 2021 (youtu.be/4t8v-yogYIw)",
+      "background": {
+        "sources": [
+          {
+            "src": "videos/cubicle-2880.mp4",
+            "width": 2880
+          },
+          {
+            "src": "videos/cubicle-1920.mp4",
+            "width": 1920
+          }
+        ],
+        "poster": "videos/cubicle-poster.jpg",
+        "matte": {
+          "src": "videos/cubicle-matte-2048.mp4",
+          "label": "Fears text (pre-rendered ink matte)"
+        },
+        "loop": true,
+        "audio": true
+      },
+      "layers": []
+    }
+  ]
+}

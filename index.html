@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>VRedux</title>
+<meta name="description" content="VRedux: stand where the film was shot and see the remakes around you.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23111%22/%3E%3Ctext x=%2250%22 y=%2268%22 font-size=%2252%22 text-anchor=%22middle%22 fill=%22%23ffe14a%22 font-family=%22Arial Black%22%3EVR%3C/text%3E%3C/svg%3E">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/","@sparkjsdev/spark":"https://cdn.jsdelivr.net/npm/@sparkjsdev/spark@2.4.0/dist/spark.module.js"}}</script>
+</head>
+<body>
+<div id="home" class="screen">
+  <header class="brand"><h1>VR<span>edux</span></h1><p>Stand on the spot. Hold up your phone. The remakes are all around you.</p></header>
+  <ul id="sceneList" class="scene-list"></ul>
+  <details class="own">
+    <summary>Load your own 360 video</summary>
+    <label class="file">Pick a file<input id="ownFile" type="file" accept="video/*"></label>
+    <form id="ownUrlForm"><input id="ownUrl" type="url" placeholder="https://…/video.mp4"><button>Load URL</button></form>
+    <p class="hint">Equirectangular (2:1) MP4. Plays in free-play mode; nothing is uploaded.</p>
+  </details>
+  <footer class="foot"><a href="https://dedomenici.com" target="_blank" rel="noopener" data-gc="footer">Vibecoded by DeDomenici</a></footer>
+</div>
+
+<div id="player" class="screen hidden">
+  <video id="cam" playsinline muted autoplay></video>
+  <canvas id="gl"></canvas>
+  <div id="topbar">
+    <button id="backBtn" class="chip" data-gc="back">◀ VRedux</button>
+    <div id="sceneTitle"></div>
+    <button id="hideBtn" class="chip" data-gc="hide-ui" title="Hide controls">⤢</button>
+  </div>
+  <div id="loc" class="loc"></div>
+  <div id="joy" class="joy hidden"><div id="joyKnob"></div></div>
+  <div id="walkHint" class="walkhint hidden">BETA · drag to look · joystick / WASD to walk</div>
+  <div id="toast" class="toast hidden"></div>
+  <div id="bigPlay" class="bigplay"><button id="bigPlayBtn" data-gc="play-start">▶ PLAY</button><p id="bigPlayHint">Turn sound on. Hold your phone up like a window.</p></div>
+  <div id="panel">
+    <div class="row modes" role="tablist">
+      <button data-mode="360" class="seg on">360</button>
+      <button data-mode="ghost" class="seg">Ghost</button>
+      <button data-mode="pass" class="seg">Passthrough</button>
+      <button data-mode="walk" class="seg hidden" id="walkSeg">Walk (beta)</button>
+    </div>
+    <div class="row">
+      <button id="playBtn" class="btn" data-gc="play">▶</button>
+      <button id="restartBtn" class="btn" data-gc="play-all" title="Play all from the start">⟲ All</button>
+      <button id="motionBtn" class="btn" data-gc="enable-motion">Enable motion</button>
+      <button id="muteBtn" class="btn" data-gc="mute">🔇</button>
+      <button id="fsBtn" class="btn" data-gc="fullscreen">⛶</button>
+    </div>
+    <div class="row">
+      <button id="nudgeL" class="btn sm" data-gc="nudge-left">◀ 5°</button>
+      <button id="alignBtn" class="btn grow" data-gc="align">Tap to recentre</button>
+      <button id="nudgeR" class="btn sm" data-gc="nudge-right">5° ▶</button>
+    </div>
+    <div id="layerRow" class="row layers"></div>
+    <details id="more">
+      <summary>Settings</summary>
+      <label id="ghostWrap">Ghost opacity <input id="ghostOpacity" type="range" min="0.05" max="1" step="0.05" value="0.5"></label>
+      <label>Cut-out source (background video)
+        <select id="matteSrc">
+          <option value="pre">Pre-rendered matte</option>
+          <option value="ai">AI person cut-out (live, beta)</option>
+          <option value="ink">Ink key (live, dark marks)</option>
+          <option value="none">None (layers only)</option>
+        </select>
+      </label>
+      <label id="aiModelWrap">AI model
+        <select id="aiModel"><option value="selfie">Fast (selfie segmenter)</option><option value="deeplab">Accurate (DeepLab, full bodies)</option></select>
+      </label>
+      <label>Layer format
+        <select id="fmtSel"><option value="auto">Auto (stacked MP4, works everywhere)</option><option value="alpha">Native alpha (WebM / HEVC)</option></select>
+      </label>
+      <div id="editor">
+        <label>Edit layer <select id="edLayer"></select></label>
+        <label>Bearing <input id="edBearing" type="range" min="-180" max="180" step="1"><output id="oBearing"></output></label>
+        <label>Distance m <input id="edDist" type="range" min="1" max="40" step="0.5"><output id="oDist"></output></label>
+        <label>Frame height m <input id="edH" type="range" min="0.5" max="15" step="0.1"><output id="oH"></output></label>
+        <label>Elevation m <input id="edE" type="range" min="-3" max="10" step="0.1"><output id="oE"></output></label>
+        <button id="copyJson" class="btn" data-gc="copy-json">Copy layer JSON</button>
+      </div>
+      <p id="diag" class="hint"></p>
+    </details>
+  </div>
+</div>
+<script data-goatcounter="https://dedomenici.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
