@@ -629,11 +629,11 @@ addEventListener('resize', resize);
 let last = performance.now(), lastSync = 0;
 function frame(now) {
   requestAnimationFrame(frame);
-  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  const rawDt = Math.min(1, (now - last) / 1000), dt = Math.min(0.1, rawDt); last = now;
   if ($('#player').classList.contains('hidden')) return;
   if (S.playing) {
     if (S.bgMedia && !S.bgMedia.v.paused && S.bgMedia.v.readyState >= 2) S.t = S.bgMedia.v.currentTime + S.bgMedia.start;
-    else S.t += dt;
+    else S.t += rawDt; // real time, so layer start offsets stay in sync even at low frame rates
   }
   if (now - lastSync > 500) { lastSync = now; syncMedia(false); }
   if (Math.abs(camera.fov - S.fov) > 0.01) { camera.fov = S.fov; camera.updateProjectionMatrix(); }
